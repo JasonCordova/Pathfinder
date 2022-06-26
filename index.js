@@ -61,7 +61,7 @@ function dragElement(e){
 }
 
 var min = 5;
-var max = 100;
+var max = 50;
 
 var grid = new Grid();
 
