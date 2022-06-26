@@ -3,7 +3,7 @@ var settingEnd = false;
 var toggleMode = false;
 var drawOrClear = "CLEAR";
 
-document.onmouseup = function(){
+document.documentElement.onmouseup = function(){
 
 	settingStart = false;
 	settingEnd = false;
@@ -155,6 +155,20 @@ class Grid {
 		this.endElement.element.onmousedown = function(){
 			settingStart = false;
 			settingEnd = true;
+		}
+
+	}
+
+	clearWalls(){
+
+		for (var i = 0; i < this.rowCount; i++){
+
+			for (var j = 0; j < this.colCount; j++){
+
+				this.cells[i][j].setWall("CLEAR");
+
+			}
+
 		}
 
 	}

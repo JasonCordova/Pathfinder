@@ -8,6 +8,12 @@ body {
 
 }
 
+:root {
+
+	--inputColor: #252525;
+
+}
+
 #viewport {
 
 	display: flex;
@@ -19,65 +25,69 @@ body {
 
 #settings {
 
-	position: fixed;
-	top: 16px;
-	left: 16px;
-	display: flex;
-	flex-direction: column;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    width: 216px;
+    padding: 16px;
+    background-color: white;
+    z-index: 1;
+    border-radius: 8px;
+    box-shadow: 0px 1px 4px #00000026;
 
 }
 
-.num-input {
+#grid-size {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.slider {
 
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-radius: 8px;
+    border-radius: 16px;
     overflow: hidden;
     box-shadow: 0px 1px 4px #00000024;
-
-}
-
-.decrement {
-
-	border-right: 1px solid #0000001a;
-
-}
-
-.increment {
-
-	border-left: 1px solid #0000001a;
+    color: white;
 
 }
 
 .value {
 
-	width: 64px;
-	text-align: center;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	appearance: none;
-	border: none;
-	outline: none;
-	height: 32px;
-	padding: 0px;
-	font-family: inherit;
-	font-size: 16px;
-	font-weight: 500;
+    width: 32px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    appearance: none;
+    border: none;
+    outline: none;
+    height: 32px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0px 16px;
+    margin-left: -16px;
+    margin-right: -16px;
+    background-color: var(--inputColor);
+    color: inherit;
 
 }
 
 .label {
 
-	margin: 8px 0px;
-
-}
-
-.label:first-child{
-
-	margin-top: 0px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
 
 }
 
@@ -94,23 +104,28 @@ input[type=number] {
 
 .input-button {
 
-	width: 32px;
-	height: 32px;
-	background-color: white;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	cursor: pointer;
-	box-sizing: border-box;
-	transition: background-color .15s ease-out;
-	user-select: none;
+    width: 32px;
+    height: 32px;
+    background-color: var(--inputColor);
+    color: inherit;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color .15s ease-out;
+    user-select: none;
+    flex-grow: 0;
+    flex-shrink: 0;
+    position: relative;
+    border-radius: 16px;
 
 }
 
 .input-button:hover {
 
-	background-color: #ebebeb;
+	background-color: #3a3a3a;
 
 }
 
@@ -149,8 +164,25 @@ input[type=number] {
 
 }
 
-.wall {
+.cell:before {
 
+	display: block;
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0);
+	width: 100%;
+	height: 100%;
+	background-color: transparent;
+	z-index: 1;
+	transition: all .15s ease-out;
+
+}
+
+.wall:before {
+
+	transform: translate(-50%, -50%) scale(1);
 	background-color: black;
 
 }

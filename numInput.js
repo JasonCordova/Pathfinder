@@ -1,8 +1,36 @@
 const updateEvent = new Event("onUpdate");
 
 class numInput {
+	
+	constructor(min = 5, max = 20, text = "", parent=document.body){
+
+		this.label = text;
+		this.min = min;
+		this.max = max;
+		this.parent = parent;
+
+		if (min > max){
+
+			let temp = min;
+			this.min = max;
+			this.max = temp;
+
+		}
+
+		this.value = min;
+		this.createSlider();
+
+		initializeInput(this);
+
+	}
 
 	createSlider(){
+
+		// Make numInput parent.
+
+		var numInput = document.createElement("div");
+		numInput.classList.add("num-input");
+		this.parent.appendChild(numInput);
 
 		// Make general label.
 
@@ -11,14 +39,14 @@ class numInput {
 			var labelElement = document.createElement("div");
 			labelElement.classList.add("label");
 			labelElement.innerText = this.label;
-			settings.appendChild(labelElement);
+			numInput.appendChild(labelElement);
 
 		}
 
 		// Make general slider element.
 
 		var sliderElement = document.createElement("div");
-		sliderElement.classList.add("num-input");
+		sliderElement.classList.add("slider");
 		this.slider = sliderElement;
 
 		// Make decrement element with eventListener.
@@ -57,28 +85,7 @@ class numInput {
 
 		// Finally append general slider to Settings tab.
 
-		settings.appendChild(sliderElement);
-
-	}
-	
-	constructor(min = 5, max = 20, text = ""){
-
-		this.label = text;
-		this.min = min;
-		this.max = max;
-
-		if (min > max){
-
-			let temp = min;
-			this.min = max;
-			this.max = temp;
-
-		}
-
-		this.value = min;
-		this.createSlider();
-
-		initializeInput(this);
+		numInput.appendChild(sliderElement);
 
 	}
 
@@ -133,11 +140,15 @@ function initializeInput(classInput){
 
 	});
 
-	classInput.incrementElement.addEventListener("mouseup", function(){
+	classInput.incrementElement.addEventListener("mouseout", function(){
 
-		clearInterval(incrementUp);
-		incrementTime = defaultTime;
-		
+		resetTimer();
+
+	});
+
+	document.addEventListener("mouseup", function(){
+
+		resetTimer();
 
 	});
 
@@ -150,11 +161,9 @@ function initializeInput(classInput){
 
 	});
 
-	classInput.decrementElement.addEventListener("mouseup", function(){
+	classInput.decrementElement.addEventListener("mouseout", function(){
 
-		clearInterval(incrementDown);
-		decrementTime = defaultTime;
-		
+		resetTimer();
 
 	});
 
@@ -181,6 +190,15 @@ function initializeInput(classInput){
 		classInput.slider.dispatchEvent(updateEvent);
 
 	});
+
+}
+
+function resetTimer(){
+
+	clearInterval(incrementUp);
+	clearInterval(incrementDown);
+	incrementTime = defaultTime;
+	decrementTime = defaultTime;
 
 }
 
