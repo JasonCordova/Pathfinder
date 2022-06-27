@@ -2,6 +2,11 @@ var settingStart = false;
 var settingEnd = false;
 var toggleMode = false;
 var drawOrClear = "CLEAR";
+var lastTouchedCell = null;
+
+var openSet = new Array();
+var closedSet = new Array();
+var globalPath = new Array();
 
 document.documentElement.onmouseup = function(){
 
@@ -31,6 +36,7 @@ class Grid {
 		// Updates grid to create rows.
 
 		this.reset();
+		this.findPath();
 
 	}
 
@@ -59,6 +65,7 @@ class Grid {
 	reset(){
 
 		this.gridElement.innerHTML = null;
+		lastTouchedCell = null;
 
 		this.cells = new Array(this.rowCount);
 
@@ -83,10 +90,12 @@ class Grid {
 
 		}
 
-		this.setStart(this.cells[0][0]);
+		
 		this.setEnd(this.cells[this.rowCount - 1][this.colCount - 1]);
+		this.setStart(this.cells[0][0]);
 
-		this.calculateDistances()
+		this.findPath();
+		this.calculateDistances();
 	}
 
 	calculateDistances(){
@@ -114,7 +123,7 @@ class Grid {
 
 	setStart(cell){
 
-		if (this.startElement != null){
+		if (this.startElement != undefined){
 
 			// Setting old element to normal.
 			this.startElement.element.classList.remove("start-element");
@@ -136,9 +145,59 @@ class Grid {
 
 	}
 
+	getNeighbors(element, diagonals = false){
+
+		var array = new Array();
+		var x = element.x;
+		var y = element.y;
+
+		for (var i = x - 1; i <= x + 1; i++){
+
+			for (var j = y - 1; j <= y + 1; j++){
+
+				if (i == x && j == y) continue; // Skips if element if currentCell is element.
+				if (!diagonals && ((i == x-1 || i == x+1) && (j == y-1 || j == y+1))) continue; // Skips if diagonal param is false & is one of the grid corners.
+
+				if (this.cells[i] == undefined || this.cells[i][j] == undefined) continue; // Checks if actually exists in grid or not.
+				if (this.cells[i][j].isWall) continue; // skip if wall.
+
+				array.push(this.cells[i][j]);
+
+			}
+
+		}
+
+		return array;
+
+	}
+
+	resetAllCost(){
+
+		for (var i = 0; i < this.rowCount; i++){
+
+			for (var j = 0; j < this.colCount; j++){
+
+				var cell = this.cells[i][j];
+				cell.g = 0;
+				cell.f = 0;
+				cell.h = 0;
+				cell.prev = null;
+
+			}
+
+		}
+
+		for (var i = 0; i < globalPath.length; i++){
+
+			globalPath[i].element.classList.remove("path");
+
+		}
+
+	}
+
 	setEnd(cell){
 
-		if (this.endElement != null){
+		if (this.endElement != undefined){
 
 			// Setting old element to normal.
 			this.endElement.element.classList.remove("end-element");
@@ -173,6 +232,120 @@ class Grid {
 
 	}
 
+	findPath(){
+
+		this.resetAllCost();
+
+		openSet = new Array(); // All nodes to be evaluated.
+		closedSet = new Array(); // All nodes already evaluated.
+
+		openSet.push(this.startElement); // Adding startElement to openSet to be evaluated.
+
+		while (openSet.length > 0){ // Loop through algo.
+
+			var currentCell = openSet[0]; // Find the element w the lowest F cost.
+
+			for (var i = 0; i < openSet.length; i++){
+
+				if (openSet[i].f < currentCell.f || openSet[i].F == currentCell.f && openSet[i].h < currentCell.h){
+					
+					currentCell = openSet[i];
+
+				}
+
+			}
+
+			removeFromArray(openSet, currentCell);
+			closedSet.push(currentCell);
+
+			if (currentCell == this.endElement){ // If current cell is end, return.
+
+				retracePath(this.startElement, this.endElement);
+				return;
+
+			}
+
+			var neighbors = this.getNeighbors(currentCell, false); // Gets neighbors of currentCell.
+
+			for (var i = 0; i < neighbors.length; i++){
+
+				var neighbor = neighbors[i];
+
+				if (closedSet.includes(neighbor)) continue; // Skip neighbor if we already evaluated it.
+
+				var distance = currentCell.g + getDistance(currentCell, neighbor);
+				if (distance < neighbor.g || !openSet.includes(neighbor)){
+
+					neighbor.g = distance;
+					neighbor.h = getDistance(neighbor, this.endElement);
+					neighbor.prev = currentCell;
+
+					if (!openSet.includes(neighbor)){
+
+						openSet.push(neighbor);
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+function retracePath(startCell, endCell){
+
+	var path = new Array();
+	var currentCell = endCell;
+
+	while (currentCell != startCell){
+
+		path.push(currentCell);
+		currentCell = currentCell.prev;
+
+	}
+
+	path = path.reverse();
+	removeFromArray(path, startCell);
+	removeFromArray(path, endCell);
+
+	globalPath = path;
+
+	for (var i = 0; i < path.length; i++){
+
+		path[i].element.classList.add("path");
+
+	}
+
+}
+
+function getDistance(gridCell, endCell){
+
+	var distanceX = Math.abs(gridCell.x - endCell.x);
+	var distanceY = Math.abs(gridCell.y - endCell.y);
+
+	if (distanceX > distanceY)
+		return (14 * distanceY) + (10 * distanceX - distanceY);
+
+	return (14 * distanceX) + (10 * distanceY - distanceX);
+
+}
+
+function removeFromArray(array, element){
+
+	for (var i = array.length; i >= 0; i--){
+
+		if (array[i] == element){
+
+			array.splice(i, 1);
+
+		}
+
+	}
+
 }
 
 function initialize(grid, cell){
@@ -185,6 +358,8 @@ function initialize(grid, cell){
 
 				if (settingStart) grid.setStart(cell);
 				else grid.setEnd(cell);
+
+				grid.findPath();
 
 			} else if (!settingStart && !settingEnd && toggleMode){
 
@@ -202,10 +377,11 @@ function initialize(grid, cell){
 			}
 
 			grid.calculateDistances();
+			grid.findPath();
 
 		}
 
-	};
+	}
 
 	cell.element.onmousedown = function(){
 
@@ -216,10 +392,9 @@ function initialize(grid, cell){
 			toggleMode = true;
 
 			cell.setWall(cell.isWall);
+			grid.findPath();
 
 		}
 
 	}
-
-
 }

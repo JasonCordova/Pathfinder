@@ -2,12 +2,16 @@ class gridCell {
 
 	constructor(x = 0, y = 0, isWall = false){
 
+		this.prev = null;
 		this.x = x;
 		this.y = y;
 		this.distanceToStart = 0;
 		this.distanceToEnd = 0;
 		this.isWall = isWall;
 		this.element;
+		this.f = 0;
+		this.g = 0;
+		this.h = 0;
 
 		var newCell = document.createElement("div");
 		newCell.classList.add("cell");
@@ -19,6 +23,12 @@ class gridCell {
 		}
 
 		this.element = newCell;
+
+	}
+
+	setPath(){
+
+		this.element.classList.add("path");
 
 	}
 

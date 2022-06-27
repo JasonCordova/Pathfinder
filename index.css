@@ -146,8 +146,8 @@ input[type=number] {
 
 .cell {
 
-    width: 48px;
-    height: 48px;
+    width: 32px;
+    height: 32px;
     margin: 2px;
     border-radius: 0px;
     background-color: white;
@@ -177,6 +177,13 @@ input[type=number] {
 	background-color: transparent;
 	z-index: 1;
 	transition: all .15s ease-out;
+
+}
+
+.path:before {
+
+	transform: translate(-50%, -50%) scale(1);
+	background-color: #0075ff;
 
 }
 
