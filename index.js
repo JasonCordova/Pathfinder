@@ -105,7 +105,7 @@ function dragElement(e){
 }
 
 var min = 10;
-var max = 50;
+var max = 30;
 
 var grid = new Grid(min, min);
 

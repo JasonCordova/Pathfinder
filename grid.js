@@ -245,9 +245,9 @@ class Grid {
 
 			var currentCell = openSet[0]; // Find the element w the lowest F cost.
 
-			for (var i = 0; i < openSet.length; i++){
+			for (var i = 1; i < openSet.length; i++){
 
-				if (openSet[i].f < currentCell.f || openSet[i].F == currentCell.f && openSet[i].h < currentCell.h){
+				if (openSet[i].f < currentCell.f || openSet[i].f == currentCell.f && openSet[i].h < currentCell.h){
 					
 					currentCell = openSet[i];
 
@@ -265,7 +265,7 @@ class Grid {
 
 			}
 
-			var neighbors = this.getNeighbors(currentCell, false); // Gets neighbors of currentCell.
+			var neighbors = this.getNeighbors(currentCell, true); // Gets neighbors of currentCell.
 
 			for (var i = 0; i < neighbors.length; i++){
 
@@ -278,6 +278,7 @@ class Grid {
 
 					neighbor.g = distance;
 					neighbor.h = getDistance(neighbor, this.endElement);
+					//neighbor.f = neighbor.g + neighbor.h;
 					neighbor.prev = currentCell;
 
 					if (!openSet.includes(neighbor)){
@@ -328,9 +329,8 @@ function getDistance(gridCell, endCell){
 	var distanceY = Math.abs(gridCell.y - endCell.y);
 
 	if (distanceX > distanceY)
-		return (14 * distanceY) + (10 * distanceX - distanceY);
-
-	return (14 * distanceX) + (10 * distanceY - distanceX);
+		return (14 * distanceY) + (10 * (distanceX - distanceY));
+	return (14 * distanceX) + (10 * (distanceY - distanceX));
 
 }
 
