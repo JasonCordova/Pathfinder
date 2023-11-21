@@ -27,12 +27,14 @@ function App() {
   return (
     <>
           <div className="header">
-              <div className="logo">
+              <a href="." className="logo">
                   <div>PATHFINDER</div>
                   <div>VISUALIZER</div>
-              </div>
+              </a>
               <div className="nav">
-                <div className="">d</div>
+                  <div className="button">Algorithms</div>
+                  <div className="button">Clear</div>
+                  <div className="button execute">Visualize</div>
               </div>
           </div>  
           <div ref={grid} className="grid">
