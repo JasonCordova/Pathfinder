@@ -2,6 +2,10 @@
 
 Created by Jason Cordova | Written in ReactJS
 
+## Description
+
+Visualize a variety of pathfinding and maze-generating algorithms through this online visualizer. You can click or hold your mouse down (tap or hold if you're on mobile) to create and remove walls. You can drag your starting and end points wherever you'd like on a small grid that's responsive to your viewport.
+
 ## Available Scripts
 
 In the project directory, you can run:
