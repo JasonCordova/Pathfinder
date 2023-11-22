@@ -1,11 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const Cell = () => {
+const Cell = (props) => {
 
     const [wall, setWall] = useState(false);
 
+    useEffect(() => {
+        setWall(false);
+    }, [])
+
     return (
-        <div className={`cell${wall ? " wall" : ""}`} onClick={() => { setWall(!wall); } }></div>
+        <div className={`cell${wall ? " wall" : ""}`} onMouseDown={() => { wall ? props.changeState("clear") : props.changeState("wall"); setWall(!wall); }} onMouseEnter={() => { if (props.data) if (props.currentState === "wall") setWall(true); else if (props.currentState === "clear") setWall(false); }}>
+            <div className="color"></div>
+        </div>
     );
 }
 
