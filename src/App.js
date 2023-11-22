@@ -4,6 +4,8 @@ const interval = 56;
 
 function App() {
 
+    var newArray;
+
     const [mouseDown, setMouse] = useState(false);
     const [grid, setGrid] = useState(Array(5).fill().map(row => new Array(5).fill( <Cell/> )));
     const gridElement = useRef(null);
@@ -18,7 +20,34 @@ function App() {
     }
 
     const initializeGrid = () => {
-        setGrid(Array(Math.floor((window.innerHeight - 86) / interval)).fill().map(row => new Array(Math.floor(window.innerWidth / interval)).fill(<Cell currentState={state} changeState={changeState} data={mouseDown} />)));
+        var row = Math.floor((window.innerHeight - 86) / interval);
+        var col = Math.floor(window.innerWidth / interval);
+        newArray = new Array(row);
+
+        for (var i = 0; i < row; i++) {
+            newArray[i] = new Array(col);
+            for (var j = 0; j < col; j++) {
+                newArray[i][j] = <Cell key={i * col + j} start={false} end={false} currentState={state} changeState={changeState} data={mouseDown} />
+            }
+        }
+
+        setGrid(newArray);
+
+    }
+
+    const resetGrid = () => {
+        var row = Math.floor((window.innerHeight - 86) / interval);
+        var col = Math.floor(window.innerWidth / interval);
+        newArray = new Array(row);
+
+        for (var i = 0; i < row; i++) {
+            newArray[i] = new Array(col);
+            for (var j = 0; j < col; j++) {
+                newArray[i][j] = <Cell key={i * col + j} initial={"clear"} start={false} end={false} currentState={state} changeState={changeState} data={mouseDown} />
+            }
+        }
+
+        setGrid(newArray);
     }
 
     window.onresize = () => {
@@ -38,8 +67,7 @@ function App() {
               </a>
               <div className="nav">
                   <div className="button">Algorithms</div>
-                  <div className="button">Generate Maze</div>
-                  <div className="button" onClick={() => { initializeGrid(); }}>Clear</div>
+                  <div className="button clear" onClick={() => { resetGrid(); }}>Clear</div>
                   <div className="button execute">Visualize</div>
               </div>
           </div>  
