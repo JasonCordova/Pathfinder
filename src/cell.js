@@ -9,7 +9,7 @@ const Cell = (props) => {
     }, [])
 
     return (
-        <div className={`cell${wall ? " wall" : ""}`} onMouseDown={() => { wall ? props.changeState("clear") : props.changeState("wall"); setWall(!wall); }} onMouseEnter={() => { if (props.data) if (props.currentState === "wall") setWall(true); else if (props.currentState === "clear") setWall(false); }}>
+        <div className={`cell${wall ? " wall" : ""}${props.start ? " start" : ""}`} onMouseDown={() => { wall ? props.changeState("clear") : props.changeState("wall"); setWall(!wall); }} onMouseEnter={() => { if (props.data) if (props.currentState === "wall") setWall(true); else if (props.currentState === "clear") setWall(false); }}>
             <div className="color"></div>
         </div>
     );
