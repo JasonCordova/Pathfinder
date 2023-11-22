@@ -1,28 +1,19 @@
-import { useState, useRef, useEffect} from 'react';
+import { useState, useRef, useEffect } from 'react';
+import Cell from './Cell.js';
+const interval = 56;
+
 function App() {
 
-    const [size, setSize] = useState({ cols: 5, rows: 5 });
-
-    const grid = useRef(null);
+    const [grid, setGrid] = useState(Array(5).fill().map(row => new Array(5).fill( <Cell/> )));
+    const gridElement = useRef(null);
 
     window.onresize = () => {
-        setSize({ cols: Math.floor(window.innerWidth / 32), rows: Math.floor((window.innerHeight - 86) / 32) });
-    }
+        setGrid(Array(Math.floor((window.innerHeight - 86) / interval)).fill().map(row => new Array(Math.floor(window.innerWidth / interval)).fill(<Cell/> )));
+    };
 
     useEffect(() => {
-        setSize({ cols: Math.floor(window.innerWidth / 32), rows: Math.floor((window.innerHeight - 86) / 32) });
-    })
-
-    useEffect(() => {
-        grid.current.innerHTML = "";
-        for (var i = 0; i < size.cols; i++) {
-            for (var j = 0; j < size.rows; j++) {
-                var newElement = document.createElement("div");
-                newElement.classList.add("cell");
-                grid.current.appendChild(newElement);
-            }
-        }
-    }, [size]);
+        setGrid( Array( Math.floor((window.innerHeight - 86) / interval )).fill().map(row => new Array( Math.floor(window.innerWidth / interval )).fill( <Cell/> )));
+    }, []);
 
   return (
     <>
@@ -33,12 +24,15 @@ function App() {
               </a>
               <div className="nav">
                   <div className="button">Algorithms</div>
+                  <div className="button">Generate Maze</div>
                   <div className="button">Clear</div>
                   <div className="button execute">Visualize</div>
               </div>
           </div>  
-          <div ref={grid} className="grid">
-           
+          <div ref={gridElement} style={{gridTemplateRows: `repeat(${grid.length}, 1fr)`, gridTemplateColumns: `repeat(${grid[0].length}, 1fr)`}} className="grid">
+              {grid.map((e, i) => {
+                  return (e);
+              }) }
            </div>
     </>
   );
